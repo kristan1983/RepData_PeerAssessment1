@@ -5,21 +5,33 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
-
-
+activity = read.csv("//Users/user/Documents/KrisTan/Coursera/activity.csv")
+summary(activity)
 
 ## What is mean total number of steps taken per day?
-
-
+library(ggplot2)
+stepsByDay <- tapply(activity$steps, activity$date, sum, na.rm=TRUE)
+qplot(stepsByDay, xlab='Total steps per day', ylab='Frequency using binwith 500', binwidth=500)
 
 ## What is the average daily activity pattern?
-
-
+library(ggplot2)
+stepsByDayMean <- mean(stepsByDay)
+stepsByDayMedian <- median(stepsByDay)
+averageStepsPerTimeBlock <- aggregate(x=list(meanSteps=activity$steps), by=list(interval=activity$interval), FUN=mean, na.rm=TRUE)
+ggplot(data=averageStepsPerTimeBlock, aes(x=interval, y=meanSteps)) +
+    geom_line() +
+    xlab("5-minute interval") +
+    ylab("average number of steps taken") 
 
 ## Imputing missing values
-
-
+numMissingValues <- length(which(is.na(activity$steps))
 
 ## Are there differences in activity patterns between weekdays and weekends?
+library(ggplot2)
+averagedActivityImputed <- aggregate(steps ~ interval + dateType, data=activityImputed, mean)
+ggplot(averagedActivityImputed, aes(interval, steps)) + 
+    geom_line() + 
+    facet_grid(dateType ~ .) +
+    xlab("5-minute interval") + 
+    ylab("avarage number of steps")
